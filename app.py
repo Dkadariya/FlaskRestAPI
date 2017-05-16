@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request
-
+from dBase import read, write
 
 app = Flask(__name__)
 
@@ -29,23 +29,26 @@ def hello():
 #        abort(404)
 #    return jsonify({'data': task[0]})
 
-@app.route('/dbase/v1.0/list', methods=['GET'])
-def get_tasks():
-    return jsonify({'data': Data})
+#@app.route('/dbase/v1.0/list', methods=['GET'])
+#def get_tasks():
+#    return jsonify({'data': Data})
 
+@app.route('/dbase/v1.0/list/<int:id>', methods=['GET'])
+def get_tasks(id):
+	Data=read(id)
+	return jsonify({'data': Data})
 
 @app.route('/dbase/v1.0/list', methods=['POST'])
 def create_task():
-    if not request.json or not 'name' in request.json:
+    if not request.json or not 'fname' in request.json:
         abort(400)
-    task = {
-        'id': Data[-1]['id'] + 1,
-        'name': request.json['name'],
-        'job': request.json.get('job', ""),
-        'age': False
-    }
-    Data.append(task)
-    return jsonify({'task': task}), 201
+    fname=request.json['fname']
+    lname= request.json['lname']
+    age= request.json['age']
+    sex= request.json['sex']
+    income= request.json['income']
+    write(fname, lname, age, sex, income)
+    return jsonify({'task': 'done'}), 201
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)
