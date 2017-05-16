@@ -1,0 +1,28 @@
+
+===============================USERS===============================
+sql = """CREATE TABLE USERS (ID int NOT NULL AUTO_INCREMENT,
+         NAME  CHAR(20) NOT NULL,
+         DOB  DATE,
+         GENDER CHAR(1),
+         ZIPCODE INT,
+         OTHER_ZIP_CODE INT,
+         ALBUTEROL INT,
+         VENTOLIN INT,
+         PROAIR INT,
+         XOPENEX INT,
+         ATROVENT INT,
+         PRIMARY KEY (ID) )"""
+
+===========================OBSERVATION=============================
+sql = """CREATE TABLE OBSERVATIONS (USER  CHAR(20) NOT NULL,
+         SENSOR_NAME  INT,
+         VALUE DOUBLE(16,4),
+         TIME_STAMP DATETIME,
+         )"""
+======================QUESTIONS_AND_ANSWERS========================
+sql = """CREATE TABLE OBSERVATIONS (USER  CHAR(20) NOT NULL,
+    ID INT,
+    ANSWER CHAR(100),
+    TIME_STAMP DATETIME
+    )"""
+

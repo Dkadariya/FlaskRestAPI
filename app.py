@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request
 from dBase import read, write
+from dateutil.parser import parse
 
 app = Flask(__name__)
 
@@ -33,21 +34,27 @@ def hello():
 #def get_tasks():
 #    return jsonify({'data': Data})
 
-@app.route('/dbase/v1.0/list/<int:id>', methods=['GET'])
+@app.route('/dbase/v1.0/list/users/<int:id>', methods=['GET'])
 def get_tasks(id):
 	Data=read(id)
 	return jsonify({'data': Data})
 
-@app.route('/dbase/v1.0/list', methods=['POST'])
+@app.route('/dbase/v1.0/list/users', methods=['POST'])
 def create_task():
-    if not request.json or not 'fname' in request.json:
+    if not request.json or not 'name' in request.json:
         abort(400)
-    fname=request.json['fname']
-    lname= request.json['lname']
-    age= request.json['age']
-    sex= request.json['sex']
-    income= request.json['income']
-    write(fname, lname, age, sex, income)
+    name =request.json['name']
+    dob = request.json['dob']
+    gender = request.json['gender']
+    zipCode = request.json['zip']
+    otherZip = request.json['otherZip']
+    albuterol = request.json['albuterol']
+    ventolin = request.json['ventolin']
+    proAir = request.json['proair']
+    xopenex = request.json['xopenex']
+    atrovent = request.json['atrovent']
+    parse(dob).strftime("%Y-%m-%d")
+    write(name, dob, gender, zipCode, otherZip, albuterol, ventolin, proAir, xopenex, atrovent)
     return jsonify({'task': 'done'}), 201
 
 if __name__ == '__main__':
