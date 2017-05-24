@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request
-from dBase import read, write
+from dBase import read, write,delete
 from dateutil.parser import parse
 
 app = Flask(__name__)
@@ -37,7 +37,7 @@ def hello():
 @app.route('/dbase/v1.0/list/users/<int:id>', methods=['GET'])
 def get_tasks(id):
 	Data=read(id)
-	return jsonify({'data': Data})
+	return jsonify({'contacts': Data})
 
 @app.route('/dbase/v1.0/list/users', methods=['POST'])
 def create_task():
@@ -50,12 +50,19 @@ def create_task():
     otherZip = request.json['otherZip']
     albuterol = request.json['albuterol']
     ventolin = request.json['ventolin']
-    proAir = request.json['proair']
+    proAir = request.json['proAir']
     xopenex = request.json['xopenex']
     atrovent = request.json['atrovent']
     parse(dob).strftime("%Y-%m-%d")
+
+    print name,dob,gender,zipCode,otherZip,albuterol,atrovent,proAir,xopenex
     write(name, dob, gender, zipCode, otherZip, albuterol, ventolin, proAir, xopenex, atrovent)
     return jsonify({'task': 'done'}), 201
+
+@app.route('/dbase/v1.0/list/users/<int:id>', methods=['DELETE'])
+def delete_user(id):
+	Data=delete(id)
+	return jsonify({'data': Data})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)
