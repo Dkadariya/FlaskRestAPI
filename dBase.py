@@ -26,7 +26,7 @@ def Create():
 
 	cursor.execute(sql)
 
-def read(id):
+def read_usrs(id):
 	db = MySQLdb.connect("localhost","root","1000yearsofpain","kHealth" )
 	cursor = db.cursor()
 	if id==10000:
@@ -114,7 +114,7 @@ def read(id):
 	except:
 		print "Error: unable to fecth data"
 
-def write(name, timestamp, gender, zipCode, otherZip, albuterol, ventolin, proAir, xopenex, atrovent):
+def write_usrs(name, timestamp, gender, zipCode, otherZip, albuterol, ventolin, proAir, xopenex, atrovent):
 	db = MySQLdb.connect("localhost","root","1000yearsofpain","kHealth" )
 	cursor = db.cursor()
 	#Prepare SQL query to INSERT a record into the database.
@@ -129,7 +129,7 @@ def write(name, timestamp, gender, zipCode, otherZip, albuterol, ventolin, proAi
 		db.rollback()
 		# disconnect from server
 
-def delete(id):
+def delete_usrs(id):
 	db = MySQLdb.connect("localhost","root","1000yearsofpain","kHealth" )
 	cursor = db.cursor()
 	sql = "DELETE FROM USERS WHERE ID = '%d'" % (id)
@@ -144,8 +144,54 @@ def delete(id):
 		db.rollback()
 		# disconnect from server
 
+def write_qtns(user, ans, tdate):
+	print "here!!!"
+	db = MySQLdb.connect("localhost","root","1000yearsofpain","kHealth" )
+	cursor = db.cursor()
+
+	for i,a in enumerate(ans):
+		sql = "INSERT INTO QUESTIONS_AND_ANSWERS(USER, ID, ANSWER, TIME_STAMP) VALUES ('%s', '%d', '%s', '%s')" %(str(user), int(ans[i][1]), str(ans[i][0]), str(tdate))
+		print (str(user), int(ans[i][1]), str(ans[i][0]), str(tdate))
+		try:
+			#Execute the SQL command
+			cursor.execute(sql)
+			# Commit your changes in the database
+			db.commit()
+		except:
+			#Rollback in case there is any errord
+			print "error writing to dataBase"
+			db.rollback()
+			# disconnect from server
+
+def read_ans(q_user):
+	db = MySQLdb.connect("localhost","root","1000yearsofpain","kHealth" )
+	cursor = db.cursor()
+	Data=[]
+	sql = "SELECT * FROM QUESTIONS_AND_ANSWERS WHERE USER = '%s'" %(q_user)
+	try:
+		#Execute the SQL command
+		cursor.execute(sql)
+		# Fetch all the rows in a list of lists.
+		results = cursor.fetchall()
+		if not cursor.rowcount:
+			return "User with this Name doesn't exist in database"
+		for row in results:
+			q_user=row[0]
+			q_id = row[1]
+			ans = row[2]
+			t_stp = row[3]
+			# Now print fetched result
+			#print "fname=%s,lname=%s,age=%d,sex=%s,income=%d" %(fname, lname, age, sex, income )
+			rData = {'user': q_user, 'q_id':q_id, 'ans': ans, 't_stp': t_stp, }
+			Data.append(rdata)
+		return Data
+	except:
+		print "Error: unable to fecth data"
+
 #write('bob', 'pit', 22, 'F', 5000)
 #read(1)
 #Create()
+#write_qtns('bob', 1, "ya I am Feeling ok now!",'1992-01-05')
+read_ans("any")
 
 db.close()
